@@ -1,6 +1,4 @@
-from dataclasses import field
-from lib2to3.pytree import Base
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from typing import Optional, List, Dict
 from pydantic import BaseModel
 
@@ -25,4 +23,10 @@ def send_message(item: Item):
 
     data.append(item)
 
-    return {'message': 'message sent'}
+    if item.data.get('reference', None):
+
+        return {'message': 'message sent',
+                'status': status.HTTP_200_OK}
+
+    raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST)
+
